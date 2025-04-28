@@ -1716,26 +1716,30 @@ def main():
             st.markdown("<h3>Key Accident Insights:</h3>", unsafe_allow_html=True)
             
             # Most dangerous hour
-            dangerous_hour = hourly_merged.loc[hourly_merged['accident_rate'].idxmax()]
+            if not hourly_merged.empty and not weather_merged.empty and not signal_merged.empty:
+                dangerous_hour = hourly_merged.loc[hourly_merged['accident_rate'].idxmax()]
             
-            # Most dangerous weather
-            dangerous_weather = weather_merged.iloc[0]
-            
-            # Most dangerous signal status
-            dangerous_signal = signal_merged.iloc[0]
-            
-            # Speed comparison
-            accident_avg_speed = accident_data['avg_vehicle_speed'].mean()
-            non_accident_avg_speed = non_accident_data['avg_vehicle_speed'].mean()
-            speed_diff_pct = ((accident_avg_speed - non_accident_avg_speed) / non_accident_avg_speed) * 100
-            
-            st.markdown(f"• Most dangerous time: **{int(dangerous_hour['hour'])}:00** hours ({dangerous_hour['accident_rate']:.2f}% accident rate)", unsafe_allow_html=True)
-            st.markdown(f"• Highest accident rate in **{dangerous_weather['weather_condition']}** weather ({dangerous_weather['accident_rate']:.2f}%)", unsafe_allow_html=True)
-            st.markdown(f"• Highest accident rate during **{dangerous_signal['signal_status']}** signal ({dangerous_signal['accident_rate']:.2f}%)", unsafe_allow_html=True)
-            st.markdown(f"• Average speed in accident cases is **{abs(speed_diff_pct):.1f}%** {'higher' if speed_diff_pct > 0 else 'lower'} than non-accident cases", unsafe_allow_html=True)
-            
-            st.markdown("</div>", unsafe_allow_html=True)
-    
+                # Most dangerous weather
+                dangerous_weather = weather_merged.iloc[0]
+                
+                # Most dangerous signal status
+                dangerous_signal = signal_merged.iloc[0]
+                
+                # Speed comparison
+                accident_avg_speed = accident_data['avg_vehicle_speed'].mean()
+                non_accident_avg_speed = non_accident_data['avg_vehicle_speed'].mean()
+                speed_diff_pct = ((accident_avg_speed - non_accident_avg_speed) / non_accident_avg_speed) * 100
+                
+                st.markdown(f"• Most dangerous time: **{int(dangerous_hour['hour'])}:00** hours ({dangerous_hour['accident_rate']:.2f}% accident rate)", unsafe_allow_html=True)
+                st.markdown(f"• Highest accident rate in **{dangerous_weather['weather_condition']}** weather ({dangerous_weather['accident_rate']:.2f}%)", unsafe_allow_html=True)
+                st.markdown(f"• Highest accident rate during **{dangerous_signal['signal_status']}** signal ({dangerous_signal['accident_rate']:.2f}%)", unsafe_allow_html=True)
+                st.markdown(f"• Average speed in accident cases is **{abs(speed_diff_pct):.1f}%** {'higher' if speed_diff_pct > 0 else 'lower'} than non-accident cases", unsafe_allow_html=True)
+                
+                st.markdown("</div>", unsafe_allow_html=True)
+            else:
+                st.markdown("• No accident data available for the selected filter/date.", unsafe_allow_html=True)
+
+
     elif page == "Real-time Monitor":
         st.markdown("<h1 class='main-header'>Real-time Traffic Monitor</h1>", unsafe_allow_html=True)
         
